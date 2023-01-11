@@ -3,8 +3,8 @@
     const gameConfig = {
         width: 500,
         height: 500,
-        rows: 2, // 行数
-        cols: 2, //列数
+        rows: 3, // 行数
+        cols: 3, //列数
         itemWidth: 0, // 每个方块的宽度
         itemHeight: 0, // 每个方块的高度
         imgurl:
@@ -17,6 +17,7 @@
 
     window.onload = function () {
         document.getElementById("start").addEventListener("click", shuffle);
+        document.getElementById("gm").addEventListener("click", startCheat);
         init()
     };
     function init() {
@@ -27,7 +28,7 @@
         // 打乱方块
         shuffle()
         // 注册点击事件
-        registerEvent();
+        registerEvent()
     }
     function initGameDom() {
         gameConfig.dom.style.width = `${gameConfig.width}px`
@@ -38,8 +39,8 @@
         gameConfig.itemHeight = gameConfig.height / gameConfig.rows;
     }
     function initBlocks() {
-        for (var i = 0; i < gameConfig.rows; i++) {
-            for (var j = 0; j < gameConfig.cols; j++) {
+        for (let i = 0; i < gameConfig.rows; i++) {
+            for (let j = 0; j < gameConfig.cols; j++) {
                 let isVisible = true
                 // 右下角的方块不可见
                 if (i === gameConfig.rows - 1 && j === gameConfig.cols - 1) {
@@ -106,16 +107,14 @@
         // 不可见的方块
         const inVisibleBlock = blocks.find(item => !item.isVisible)
         blocks.forEach(item => {
-            item.dom.onclick = function (e) {
+            item.dom.onclick = function () {
                 if (gameConfig.isOver) {
                     return
                 }
                 // 邻近的item有不可见的才可以交换
                 if (item.top === inVisibleBlock.top || item.left === inVisibleBlock.left) {
                     exchange(item, inVisibleBlock)
-                    setTimeout(() => {
-                        isWin()
-                    }, 0)
+                    isWin()
                 }
             }
         })
@@ -123,12 +122,42 @@
     function isWin() {
         const isWin = blocks.every(item => item.top === item.correctTop && item.left === item.correctLeft)
         if (isWin) {
-            alert('恭喜，闯关成功')
+            gameConfig.isOver = true;
+            gameConfig.dom.style.background = `url(${gameConfig.imgurl})`;
             //游戏结束，去掉所有边框
             blocks.forEach(function (b) {
-                b.dom.style.border = "none";
-                b.dom.style.display = "block";
+                // b.dom.style.border = "none";
+                b.dom.style.display = "none";
             });
+            // setTimeout(() => {
+            //     alert('恭喜，闯关成功')
+            // }, 0)
         }
+    }
+    /** 金手指，自动拼图 */
+    function cheat() {
+        const inVisibleBlock = blocks.find(item => !item.isVisible)
+        blocks.forEach(item => {
+            if (gameConfig.isOver) {
+                clearInterval(timer)
+                return
+            }
+            // 邻近的item有不可见的才可以交换
+            if (item.top === inVisibleBlock.top || item.left === inVisibleBlock.left) {
+                setTimeout(() => {
+                    exchange(item, inVisibleBlock)
+                    isWin()
+                }, 1000)
+            }
+        })
+    }
+    let times = 0
+    let timer = null
+    function startCheat() {
+        timer = setInterval(() => {
+            times++
+            console.log(`已尝试${times}次`);
+            cheat()
+        }, 200);
     }
 })();

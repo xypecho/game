@@ -1,0 +1,37 @@
+body {
+    text-align: center;
+}
+
+#game {
+    margin: 0 auto;
+}
+
+#buttons {
+    margin-top: 6px;
+}
+
+#buttons button {
+    display: inline-block;
+    margin-bottom: 0;
+    padding: .5em 1em;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    outline: 0;
+    user-select: none;
+    transition: background-color .3s ease-out, border-color .3s ease-out;
+    color: #fff;
+    background-color: #0e90d2;
+    border-color: #0e90d2;
+}
+
+#buttons #gm {
+    background-color: #F37B1D;
+    border-color: #F37B1D;
+}
